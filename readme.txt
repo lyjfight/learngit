@@ -7,4 +7,4 @@ git has a mutable index called stage
 git tracks changs of file.
 I put this file to GitHub.
 i enter again
-Creating a new branch is quick
+Creating a new branch is quick & simple
