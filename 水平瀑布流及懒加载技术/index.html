@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>水平瀑布流懒加载技术</title>
+	<style>
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		#container {
+			position: relative;
+		}
+		.box {
+			float: left;
+			padding-left: 5px;
+		}
+		.box-img {
+			padding: 5px;
+			border: 1px solid #ccc;
+			box-shadow: 0 0 5px #ccc;			border-radius: 5px;
+		}
+		.box-img img {
+			transition: 0.3s;
+			width: 230px;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div class="box">
+			<div class="box-img"><img src="images/pic (1).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (2).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (3).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (4).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (5).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (6).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (7).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (8).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (9).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (10).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (11).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (12).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (13).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (14).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (15).jpg" alt=""></div>
+		</div>
+		<div class="box">
+			<div class="box-img"><img src="images/pic (16).jpg" alt=""></div>
+		</div>
+		<!-- (div.box>div.box-img>img[src=images/pic ($).jpg][alt= ])*2 -->
+	</div>
+	<script type="text/javascript"> 
+		/*ES6*/
+		const oParent=document.getElementById('container');
+		window.addEventListener('load',()=>{
+			imgLocation('box');
+			const imgData=[{'src':'pic (17).jpg'},{'src':'pic (18).jpg'},{'src':'pic (19).jpg'},{'src':'pic (20).jpg'},{'src':'pic (21).jpg'},{'src':'pic (22).jpg'}];
+			this.addEventListener('scroll',()=>{
+				if(checkLoading('box')){
+					imgData.map((current)=>{
+						const oDiv=document.createElement('div');
+						oDiv.className='box';
+						oParent.appendChild(oDiv);
+						const boxImg=document.createElement('div');
+						boxImg.className='box-img';
+						oDiv.appendChild(boxImg);
+						const img=new Image();
+						img.src='images/'+current.src+'';
+						boxImg.appendChild(img);
+					});	
+					imgLocation('box');			
+				}
+			})	
+		});
+		const checkLoading=(child)=>{
+			const aContent=getChilds(child);
+			const lastTop=aContent[aContent.length-1].offsetTop;
+			const scrollTop=document.documentElement.scrollTop || document.body.scrollTop;
+			const pageHight=document.documentElement.clientHeight || document.body.clientHeight;
+			if(scrollTop+pageHight>lastTop){
+				return true;
+			}
+		}
+		const imgLocation=(child)=>{
+			//将父极下所有符合条件的子元素全部取出
+			const aContent=getChilds(child);
+			const imgWidth=aContent[0].offsetWidth;
+			const num=~~(document.documentElement.clientWidth/imgWidth);
+			oParent.style.cssText='width: '+imgWidth*num+'px;margin: 0 auto;';
+			//计算图片的高度
+			const heightArr=[];
+			[].map.call(aContent,(current,index)=>{
+				if(index<5){
+					heightArr.push(current.offsetHeight);
+				}else{
+					//得到图片的最小高度
+					const minHeight=Math.min(...heightArr);
+					//得到最小高度的序列号
+					const minIndex=getMinIndex(heightArr).index;
+					current.style.position="absolute";
+					current.style.top=minHeight+'px';
+					//更新最小的高度
+					current.style.left=aContent[minIndex].offsetLeft+'px';
+					heightArr[minIndex]=heightArr[minIndex]+current.offsetHeight;
+				}
+			});
+		}
+		const getChilds=(child)=>{
+			const childArr=[];
+			const tagsAll=oParent.getElementsByTagName('*');
+			[].map.call(tagsAll,(current)=>{
+				if(current.className==child){
+					childArr.push(current)
+				}
+			});
+			return childArr;
+		}
+		const getMinIndex=(arr)=>{
+			/*for(var i in heightArr){
+				if(heightArr[i]==minHeight){
+					return i;
+				}
+			}*/
+			return arr.reduce((a,b,index,arr)=>{
+				if(b<=a.val){
+					a.val=b;
+					a.index=index;
+				}
+				return a;
+			},{val:arr[0],index:0});
+		}
+
+		/*function getMin(arr){
+			var arrLength=arr.length;
+			for(var i=0,ret=arr[0];i<arrLength;i++){
+				ret=Math.min(ret,arr[i]);
+			}
+			return ret;
+		}*/
+	</script>
+</body>
+</html>

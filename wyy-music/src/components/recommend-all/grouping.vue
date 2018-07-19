@@ -1,10 +1,10 @@
 <template>
 	<div class="group">
 		<el-row class='group-el-row'>
-		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/second/recommend"><i class="iconfont icon-Radio"></i></router-link></div><span>私人FM</span></div></el-col>
-		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/second/recommend"><i class="iconfont icon-rili"></i></router-link></div><span>每日推荐</span></div></el-col>
-		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/second/recommend"><i class="iconfont icon-gedan"></i></router-link></div><span>歌单</span></div></el-col>
-		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/second/recommend"><i class="iconfont icon-paixingbang"></i></router-link></div><span>排行榜</span></div></el-col>
+		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/app/second/recommend"><i class="iconfont icon-Radio"></i></router-link></div><span>私人FM</span></div></el-col>
+		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/app/second/recommend"><i class="iconfont icon-rili"></i></router-link></div><span>每日推荐</span></div></el-col>
+		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/app/second/recommend"><i class="iconfont icon-gedan"></i></router-link></div><span>歌单</span></div></el-col>
+		  <el-col :span="6"><div class="grid-content"><div class="group-y"><router-link to="/app/second/recommend"><i class="iconfont icon-paixingbang"></i></router-link></div><span>排行榜</span></div></el-col>
 		</el-row>
 	</div>
 </template>

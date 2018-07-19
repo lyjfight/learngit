@@ -59,6 +59,7 @@
 	height: 170px;
 	border-radius: 4px;
 	position: relative;
+	overflow: hidden;
 }
 .anchorst .content li.btm {
 	margin-top: 10px;

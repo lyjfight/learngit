@@ -29,6 +29,11 @@
 <script type="text/javascript">
 export default {
 	name:'banner',
+	data(){
+		return {
+			banner_timer:'' //定时器
+		}
+	},
 	mounted:function(){
 		var aLi=document.querySelectorAll(".banner li");
 		var aLine=document.querySelectorAll(".banner a");
@@ -106,7 +111,7 @@ export default {
 
 		lineColor();
 
-		var timer=setInterval(function(){
+		this.banner_timer=setInterval(function(){
 			nextPic();	
 		},6000);
 
@@ -116,7 +121,7 @@ export default {
 
 		//手指按下
 		wrap.addEventListener("touchstart",function(e){
-			clearInterval(timer);
+			clearInterval(this.banner_timer);
 			aLi.forEach(function(item){
 				item.style.transition="";
 			})
@@ -160,7 +165,7 @@ export default {
 		    		prePic();
 		    	}
 		    }
-		    timer=setInterval(function(){
+		    this.banner_timer=setInterval(function(){
 				nextPic();	
 			},6000);
 		})
@@ -172,7 +177,7 @@ export default {
 .banner {
 	width: 100%;
 	height: 170px;
-	margin-top: 70px;
+	margin-top: 76px;
 	overflow: hidden;
 }
 .banner .bgc {

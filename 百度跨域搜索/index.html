@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		img.title {
+			display: block;
+			margin: 100px auto 0px;
+			width: 280px;
+			height: 130px;
+		}
+		.show {
+			width: 625px;
+			height: 35px;
+			margin: 20px auto;
+			position: relative;
+		}
+		#text {
+			width: 500px;
+			height: 35px;
+			text-indent: 10px;
+			float: left;
+		}
+		.but {
+			width: 110px;
+			height: 39px;
+			background: #3399ff;
+			color: #fff;
+			line-height: 39px;
+			text-align: center;
+			cursor: pointer;
+			float: left;
+		}
+		.but:hover {
+			background: #3366ff;
+		}
+		#search {
+			width: 502px;
+			border: 1px solid #ddd;
+			position: absolute;
+			top: 37px;
+			border-top: none;
+			display: none;
+		}
+		#search ul li {
+			list-style: none;
+			width: 502px;
+			height: 30px;
+			text-indent: 10px;
+			line-height: 30px;
+			font-family: "微软雅黑";
+		}
+		#search ul li a {
+			color: #000;
+			text-decoration: none;
+			display: block;
+		}
+		#search ul li a:hover {
+			background: #ddd;
+		}
+	</style>
+</head>
+<body>
+	<img src="images/bd_logo1.png" class="title">
+	<div class="show">
+		<input type="text" id="text">
+		<div class="but">百度一下</div>
+		<div id="search">
+			<ul>
+				
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var oText=document.getElementById("text");
+		var oSea=document.getElementById("search");
+		var oUl=document.getElementsByTagName("ul")[0];
+		oText.onkeyup=function(){
+			var wd=this.value;
+			var Os=document.createElement("script");
+			Os.src=`https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${wd}&cb=xiaolong`;
+			document.body.appendChild(Os);
+
+			// val?oSea.style.display="block":oSea.style.display="none";
+		}
+
+		function xiaolong(mjson){
+			oUl.innerHTML="";
+			if(mjson.s.length){
+				oSea.style.display="block";
+				mjson.s.forEach(function(el){
+					var oLi=document.createElement('li');
+					oLi.innerHTML="<a href='https://www.baidu.com/s?wd="+el+"'>"+el+"</a>";
+					// oLi.innerHTML="<a href='https://www.taobao.com'>"+el+"</a>";
+					oUl.appendChild(oLi);
+				});
+			}
+		}
+	</script>
+</body>
+</html>

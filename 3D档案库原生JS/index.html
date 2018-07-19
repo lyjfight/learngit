@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>原生JS之3D档案库</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+</head>
+<body>
+	<div id="all">
+		<!-- 主屏显示 -->
+		<div id="main">
+			<!-- 所有li模块 -->
+			<div id="list">
+				<ul id="box"></ul>
+			</div>
+
+			<!-- 左下角按钮 -->
+			<div id="btn">
+				<ul>
+					<li>分页</li>
+					<li>螺旋</li>
+					<li>球体</li>
+					<li>表</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/data.js"></script>
+	<script type="text/javascript">
+		
+		function Magic(){ //构造函数
+			this.listNum=125;
+			this.oMain=document.getElementById('main');
+			this.oUl=document.getElementById('list').children[0];
+			this.aLi=this.oUl.children;
+			this.aBtn=document.getElementById('btn').getElementsByTagName('li');
+			this.lastX;this.lastY;this.nowX;this.nowY;this.minusX;this.minusY;
+			this.roX=-15;this.roY=0; //基础值
+			this.pec=-200; 
+		}
+		Magic.prototype={
+			//初始化
+			init:function(){
+				for(var i=0;i<this.listNum;i++){
+					var oLi=document.createElement('li');
+					var d=flyData[0];
+					oLi.innerHTML="<b class='liCover'></b>"+
+								  "<p class='liTitle'>"+d.type+"</p>"+
+								  "<p class='liAuthor'>"+d.author+"</p>"+
+								  "<p class='liTime'>"+d.time+"</p>";
+					var tX=Math.random()*3000-2000;
+					var tY=Math.random()*3000-2000;
+					var tZ=Math.random()*3000-2000;
+					oLi.style.transform="translate3D("+tX+"px,"+tY+"px,"+tZ+"px)";
+					this.oUl.appendChild(oLi);
+				}	
+					this.table();	
+				// setTimeout(function(){
+				// 	this.table();
+				// }.bind(this),0);
+				this.clickEvent();
+				this.drag();
+				this.tensile();
+			},
+			clickEvent:function(){
+				//数组映射(通过下标去找)
+				var arr=[this.grid,this.helix,this.sphere,this.table];
+				for(var i=0;i<this.aBtn.length;i++){
+					this.aBtn[i].onclick=arr[i].bind(this);
+				}
+			},
+			//分页
+			grid:function(){
+				if(this.grid.arr){
+					for(var i=0;i<this.listNum;i++){
+						this.aLi[i].style.transform=this.grid.arr[i];
+					}
+				}else{	
+					this.grid.arr=[];
+					var disX=150; //每一个li水平的间距
+					var disY=150; //每一个li竖直的间距
+					var disZ=300;
+					for(var i=0;i<this.listNum;i++){
+						this.aLi.x=i%5; //x轴序列号
+						this.aLi.y=~~(i%25/5); //y轴序列号
+						this.aLi.z=4-~~(i/25); //z轴序列号
+						var x=(this.aLi.x-2)*disX;
+						var y=(this.aLi.y-2)*disY;
+						var z=(this.aLi.z-2)*disZ;
+						var val="translate3D("+x+"px,"+y+"px,"+z+"px)";
+						this.grid.arr[i]=val;
+						this.aLi[i].style.transform=val;
+					}
+				}
+				
+			},
+			//螺旋
+			helix:function(){
+				if(this.helix.arr){
+					for(var i=0;i<this.listNum;i++){
+						this.aLi[i].style.transform=this.helix.arr[i];
+					}	
+				}else{
+					this.helix.arr=[];
+					var h=3.7, //环数
+					num=this.listNum/h, //每环个数
+					deg=360/num, //每一个li Y旋转的相差值
+					tY=3.2, //每一个li上下位移相差
+					mid=this.listNum/2-10; //找到中间点
+					for(var i=0;i<this.listNum;i++){
+						var val="rotateY("+i*deg+"deg) translateY("+(i-mid)*tY+"px) translateZ("+400+"px)"
+						this.helix.arr[i]=val;
+						this.aLi[i].style.transform=val;
+					}
+				}
+			},
+			//表
+			table:function(){
+				if(this.table.arr){
+					for(var i=0;i<this.listNum;i++){
+						this.aLi[i].style.transform=this.table.arr[i];
+					}
+				}else{
+					this.table.arr=[];
+					var disX=65; //每一个li水平的间距
+					var disY=85; //每一个li竖直的间距
+					// var disZ=300;
+					for(var i=0;i<this.listNum;i++){
+						this.aLi.x=i%18; //x轴序列号
+						this.aLi.y=~~(i%125/18); //y轴序列号
+						var x=(this.aLi.x-8)*disX;
+						var y=(this.aLi.y-3)*disY;
+						var val="translate3D("+x+"px,"+y+"px,0px)";
+						this.table.arr[i]=val;
+						this.aLi[i].style.transform=val;
+					}
+				}		
+			},
+			//球体
+			sphere:function(){
+				if(this.sphere.arr){
+					for(var i=0;i<this.listNum;i++){
+						this.aLi[i].style.transform=this.sphere.arr[i];
+					}	
+				}else{
+					this.sphere.arr=[];
+					for(var i=0;i<this.listNum;i++){
+						var phi = Math.acos( -1 + ( 2 * i ) / (this.listNum) );
+						var theta = Math.sqrt( (this.listNum) * Math.PI ) * phi;
+						var x = 320 * Math.cos( theta ) * Math.sin( phi );
+						var y = 320 * Math.sin( theta ) * Math.sin( phi );
+						var z = 320 * Math.cos( phi );
+						var val="rotateX("+0+"deg) rotateX("+0+"deg) translate3D("+x+"px,"+y+"px,"+z+"px)";
+						this.sphere.arr[i]=val;
+						this.aLi[i].style.transform=val;
+					}
+				}
+			},
+			//拖拽
+			drag:function(){
+				//鼠标按下
+				document.onmousedown=function(e){
+					//鼠标起始点
+					this.lastX=e.clientX;
+					this.lastY=e.clientY;
+					document.onmousemove=function(e){
+						//移动目标点
+						this.nowX=e.clientX;
+						this.nowY=e.clientY;
+						//计算目标点-起始点的间距（移动的差值）
+						this.minusX=this.nowX-this.lastX;
+						this.minusY=this.nowY-this.lastY;
+						//要在原先的基础值上进行差值的累加
+						this.roX-=this.minusY*0.3; //把Y轴的差值给旋转的X轴
+						this.roY+=this.minusX*0.3; //把X轴的差值给旋转的Y轴
+						//先移动盒子
+						this.oUl.style.transform='translateZ('+this.pec+'px) rotateX('+this.roX+'deg) rotateY('+this.roY+'deg)';
+						//再更新过去的点(现在的点成为过去移动过的点)
+						this.lastX=this.nowX;
+						this.lastY=this.nowY;
+					}.bind(this);
+					document.onmouseup=function(){
+						document.onmousemove=null;
+					}.bind(this);
+					return false; //阻止默认事件
+				}.bind(this);
+			},
+			tensile:function(){
+				var scrollFunc = function (e) {  
+		        e = e || window.event;  
+		        if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件               
+		            if (e.wheelDelta > 0) { //当滑轮向上滚动时
+		            	this.pec+=50; 
+		            	if(this.pec>700)
+		            	{
+		            		this.pec=700;
+		            	}
+		            }  
+		            if (e.wheelDelta < 0) { //当滑轮向下滚动时 
+		            	this.pec-=50; 
+		            	if(this.pec<-1800)
+		            	{
+		            		this.pec=-1800;
+		            	}
+		            }  
+		        } else if (e.detail) {  //Firefox滑轮事件  
+		            if (e.detail> 0) { //当滑轮向上滚动时 
+		            	this.pec+=50; 
+		            	if(this.pec>700)
+		            	{
+		            		this.pec=700;
+		            	} 
+		            }  
+		            if (e.detail< 0) { //当滑轮向下滚动时  
+		            	this.pec-=50; 
+		            	if(this.pec<-1800)
+		            	{
+		            		this.pec=-1800;
+		            	}
+		            }  
+		        }
+		        this.oUl.style.transform='translateZ('+this.pec+'px) rotateX('+this.roX+'deg) rotateY('+this.roY+'deg)';  
+		    }.bind(this);  
+		    //给页面绑定滑轮滚动事件  
+		    if (document.addEventListener) {//firefox  
+		        document.addEventListener('DOMMouseScroll', scrollFunc, false);  
+		    }  
+		    //滚动滑轮触发scrollFunc方法  //ie 谷歌  
+		    window.onmousewheel = document.onmousewheel = scrollFunc; 
+			}
+		}
+		var magic = new Magic();
+		magic.init();
+		/*
+			动态的创建125个DOM元素  方法
+		 */
+	</script>
+</body>
+</html>
